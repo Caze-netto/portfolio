@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valdir Cazé Netto | Desenvolvedor Full Stack & DevSecOps</title>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- CSS Reset & Variaveis Globais --- */
+        :root {
+            --bg-color: #0d1117;
+            --primary-color: #58a6ff;
+            --secondary-color: #161b22;
+            --text-color: #c9d1d9;
+            --text-color-secondary: #8b949e;
+            --border-color: #30363d;
+            --shadow-color: rgba(88, 166, 255, 0.2);
+            --font-family: 'Inter', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-family);
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* --- Animações e Efeitos Visuais --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* --- Navegação Fixa --- */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1rem 0;
+            z-index: 1000;
+            background: rgba(13, 17, 23, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav .logo {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            user-select: none;
+        }
+
+        nav .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+
+        nav a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        
+        nav .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -6px;
+            left: 0;
+            background-color: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        nav .nav-links a:hover, nav .nav-links a.active {
+            color: var(--primary-color);
+        }
+        
+        nav .nav-links a:hover::after, nav .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            z-index: 1001;
+        }
+        
+        .hamburger .bar {
+            display: block;
+            width: 25px;
+            height: 3px;
+            margin: 5px auto;
+            background-color: var(--text-color);
+            transition: all 0.3s ease-in-out;
+        }
+        
+        .mobile-nav {
+            position: fixed;
+            top: 0;
+            left: 100%;
+            width: 100%;
+            height: 100vh;
+            background: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            list-style: none;
+            transition: left 0.4s ease-in-out;
+            z-index: 1000;
+        }
+        
+        .mobile-nav.active {
+            left: 0;
+        }
+        
+        .mobile-nav li {
+            margin: 1.5rem 0;
+        }
+        
+        .mobile-nav a {
+            font-size: 1.5rem;
+        }
+
+        /* --- Seção Hero --- */
+        #hero {
+            height: 100vh;
+            min-height: 700px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            padding: 0 5%;
+        }
+        
+        #hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, rgba(13, 17, 23, 0) 0%, var(--bg-color) 70%);
+            z-index: 1;
+        }
+        
+        .background-animation {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+        
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            background: var(--primary-color);
+            animation: move 25s linear infinite;
+            opacity: 0.1;
+        }
+
+        .circle:nth-child(1) { width: 60px; height: 60px; left: 15%; animation-duration: 40s; }
+        .circle:nth-child(2) { width: 100px; height: 100px; left: 35%; animation-duration: 20s; }
+        .circle:nth-child(3) { width: 40px; height: 40px; left: 75%; animation-duration: 30s; }
+        .circle:nth-child(4) { width: 80px; height: 80px; left: 90%; animation-duration: 50s; }
+
+        @keyframes move {
+            0% { transform: translateY(100vh) scale(0); }
+            100% { transform: translateY(-10vh) scale(1); }
+        }
+
+        .hero-content {
+            z-index: 2;
+        }
+
+        .hero-content h1 {
+            font-size: clamp(3rem, 7vw, 5rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.1;
+        }
+        
+        .hero-content h1 span {
+            color: var(--primary-color);
+        }
+
+        .hero-content .subtitle {
+            font-size: clamp(1.2rem, 3vw, 1.7rem);
+            color: var(--text-color-secondary);
+            margin-bottom: 2.5rem;
+            min-height: 50px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: var(--primary-color);
+            color: #fff;
+            padding: 14px 35px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px var(--shadow-color);
+        }
+
+        /* --- Estilo Padrão das Seções --- */
+        section {
+            padding: 6rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.8rem;
+            margin-bottom: 4rem;
+            font-weight: 600;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            width: 100px;
+            height: 4px;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--primary-color);
+            border-radius: 2px;
+        }
+
+        /* --- Seção Projeto --- */
+        .project-card {
+            background: var(--secondary-color);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            padding: 3rem;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            border-color: var(--primary-color);
+        }
+
+        .project-card h3 {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .project-card p {
+            color: var(--text-color-secondary);
+            margin-bottom: 2.5rem;
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .project-card h4 {
+            margin-bottom: 2rem;
+            font-size: 1.2rem;
+            color: var(--text-color);
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .tech-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 1rem;
+            color: var(--text-color-secondary);
+            transition: color 0.3s, transform 0.3s;
+        }
+        
+        .tech-item:hover {
+            color: var(--primary-color);
+            transform: scale(1.1);
+        }
+
+        .tech-item i {
+            font-size: 2.8rem;
+        }
+
+        /* --- Seção Competências --- */
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .skill-card {
+            background: var(--secondary-color);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1.5rem 2rem;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .skill-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .skill-card i {
+            font-size: 2rem;
+            color: var(--primary-color);
+        }
+        
+        .skill-card span {
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+        
+        /* --- Seção Certificações --- */
+        .certifications-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .certification-card {
+            background: var(--secondary-color);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .certification-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+        
+        .certification-card i {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            flex-shrink: 0;
+        }
+        
+        .certification-info h5 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 0.25rem;
+        }
+        
+        .certification-info p {
+            font-size: 0.9rem;
+            color: var(--text-color-secondary);
+        }
+
+        /* --- Seção Idiomas --- */
+        .language-card {
+            background: var(--secondary-color);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 2rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .language-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .language-header i {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+        }
+        
+        .language-info h5 {
+            font-size: 1.2rem;
+            color: var(--text-color);
+            margin-bottom: 0.2rem;
+        }
+        
+        .language-info p {
+            color: var(--text-color-secondary);
+        }
+        
+        .proficiency-bar-container {
+            width: 100%;
+            height: 8px;
+            background-color: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .proficiency-bar {
+            height: 100%;
+            background-color: var(--primary-color);
+            border-radius: 4px;
+        }
+
+        /* --- Seção Contato --- */
+        #contato .container {
+            text-align: center;
+        }
+        
+        #contato p {
+            font-size: 1.2rem;
+            color: var(--text-color-secondary);
+            margin-bottom: 3rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 4rem;
+        }
+
+        .contact-link {
+            font-size: 4.5rem;
+            color: var(--text-color-secondary);
+            transition: color 0.3s, transform 0.3s;
+        }
+
+        .contact-link:hover {
+            color: var(--primary-color);
+            transform: scale(1.15) rotate(-5deg);
+        }
+
+        /* --- Rodapé --- */
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 4rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-color-secondary);
+        }
+        
+        /* --- Media Queries para Responsividade --- */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hamburger {
+                display: block;
+            }
+            
+            .hamburger.active .bar:nth-child(2) {
+                opacity: 0;
+            }
+            .hamburger.active .bar:nth-child(1) {
+                transform: translateY(8px) rotate(45deg);
+            }
+            .hamburger.active .bar:nth-child(3) {
+                transform: translateY(-8px) rotate(-45deg);
+            }
+
+            section {
+                padding: 4rem 0;
+            }
+
+            .section-title {
+                font-size: 2.2rem;
+                margin-bottom: 3rem;
+            }
+            
+            .project-card {
+                padding: 2rem;
+            }
+            
+            .contact-link {
+                font-size: 3.5rem;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Cabeçalho de Navegação -->
+    <nav>
+        <div class="container">
+            <div class="logo">VC.dev</div>
+            <ul class="nav-links">
+                <li><a href="#hero" class="active">Início</a></li>
+                <li><a href="#projeto">Projeto</a></li>
+                <li><a href="#competencias">Competências</a></li>
+                <li><a href="#certificacoes">Certificações</a></li>
+                <li><a href="#idiomas">Idiomas</a></li>
+                <li><a href="#contato">Contato</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Menu Mobile -->
+    <ul class="mobile-nav">
+        <li><a href="#hero">Início</a></li>
+        <li><a href="#projeto">Projeto</a></li>
+        <li><a href="#competencias">Competências</a></li>
+        <li><a href="#certificacoes">Certificações</a></li>
+        <li><a href="#idiomas">Idiomas</a></li>
+        <li><a href="#contato">Contato</a></li>
+    </ul>
+
+    <!-- Seção de Início (Hero) -->
+    <header id="hero">
+        <div class="background-animation">
+            <div class="circle"></div>
+            <div class="circle"></div>
+            <div class="circle"></div>
+            <div class="circle"></div>
+        </div>
+        <div class="hero-content">
+            <h1>Olá, eu sou <span>Valdir Cazé</span>.</h1>
+            <p class="subtitle" id="subtitle"></p>
+            <a href="#projeto" class="cta-button">Conheça meu trabalho</a>
+        </div>
+    </header>
+
+    <main>
+        <!-- Seção Projeto em Destaque -->
+        <section id="projeto">
+            <div class="container reveal">
+                <h2 class="section-title">Projeto em Destaque</h2>
+                <div class="project-card">
+                    <h3>doTask - Gerenciador de Tarefas Inteligente</h3>
+                    <p>Uma aplicação web completa para gerenciamento de tarefas, construída com foco em alta performance, escalabilidade e segurança. O doTask utiliza uma arquitetura moderna para garantir uma experiência de usuário fluida e confiável.</p>
+                    <h4>Stack Tecnológica</h4>
+                    <div class="tech-grid">
+                        <div class="tech-item"><i class="fab fa-react"></i><span>React</span></div>
+                        <div class="tech-item"><i class="fab fa-js-square"></i><span>JavaScript</span></div>
+                        <div class="tech-item"><i class="fab fa-java"></i><span>Java</span></div>
+                        <div class="tech-item"><i class="fas fa-leaf"></i><span>Spring Boot</span></div>
+                        <div class="tech-item"><i class="fas fa-database"></i><span>PostgreSQL</span></div>
+                        <div class="tech-item"><i class="fas fa-server"></i><span>Redis</span></div>
+                        <div class="tech-item"><i class="fab fa-jenkins"></i><span>Jenkins</span></div>
+                        <div class="tech-item"><i class="fab fa-docker"></i><span>Docker</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção de Competências -->
+        <section id="competencias">
+            <div class="container reveal">
+                <h2 class="section-title">Minhas Competências</h2>
+                <div class="skills-container">
+                    <div class="skill-card"><i class="fab fa-java"></i><span>Java</span></div>
+                    <div class="skill-card"><i class="fas fa-leaf"></i><span>Spring Boot</span></div>
+                    <div class="skill-card"><i class="fab fa-docker"></i><span>Docker</span></div>
+                    <div class="skill-card"><i class="fab fa-jenkins"></i><span>Jenkins</span></div>
+                    <div class="skill-card"><i class="fas fa-shield-alt"></i><span>DevSecOps</span></div>
+                    <div class="skill-card"><i class="fas fa-infinity"></i><span>CI/CD</span></div>
+                    <div class="skill-card"><i class="fab fa-aws"></i><span>AWS</span></div>
+                    <div class="skill-card"><i class="fab fa-linux"></i><span>Linux</span></div>
+                    <div class="skill-card"><i class="fas fa-database"></i><span>SQL</span></div>
+                    <div class="skill-card"><i class="fab fa-python"></i><span>Python</span></div>
+                    <div class="skill-card"><i class="fab fa-c-plus-plus"></i><span>C++</span></div>
+                    <div class="skill-card"><i class="fab fa-php"></i><span>PHP</span></div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Seção de Certificações -->
+        <section id="certificacoes">
+            <div class="container reveal">
+                <h2 class="section-title">Certificações</h2>
+                <div class="certifications-grid">
+                    <div class="certification-card"><i class="fas fa-database"></i><div class="certification-info"><h5>SQL com Oracle Database</h5><p>Udemy</p></div></div>
+                    <div class="certification-card"><i class="fab fa-docker"></i><div class="certification-info"><h5>Docker: Criando e Gerenciando Containers</h5><p>Alura</p></div></div>
+                    <div class="certification-card"><i class="fab fa-gitlab"></i><div class="certification-info"><h5>Aprenda CI/CD com GitLab</h5><p>Udemy</p></div></div>
+                    <div class="certification-card"><i class="fab fa-linux"></i><div class="certification-info"><h5>Certificação Linux LPI Essentials</h5><p>Alura</p></div></div>
+                    <div class="certification-card"><i class="fab fa-aws"></i><div class="certification-info"><h5>AWS Certified Cloud Practitioner</h5><p>Alura</p></div></div>
+                    <div class="certification-card"><i class="fas fa-shield-virus"></i><div class="certification-info"><h5>Introduction to Cybersecurity</h5><p>Cisco</p></div></div>
+                    <div class="certification-card"><i class="fas fa-project-diagram"></i><div class="certification-info"><h5>Estruturas de Dados com Java</h5><p>Udemy</p></div></div>
+                    <div class="certification-card"><i class="fas fa-user-shield"></i><div class="certification-info"><h5>Fundamentos de Segurança em Aplicações - AppSec</h5><p>Udemy</p></div></div>
+                    <div class="certification-card"><i class="fab fa-java"></i><div class="certification-info"><h5>Java: Lambdas, Streams e Spring Framework</h5><p>Alura</p></div></div>
+                    <div class="certification-card"><i class="fas fa-file-contract"></i><div class="certification-info"><h5>LGPD e Segurança da Informação</h5><p>Udemy</p></div></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção de Idiomas -->
+        <section id="idiomas">
+            <div class="container reveal">
+                 <h2 class="section-title">Idiomas</h2>
+                 <div class="language-card">
+                    <div class="language-header">
+                        <i class="fas fa-globe"></i>
+                        <div class="language-info">
+                            <h5>Inglês</h5>
+                            <p>Professional Working Proficiency</p>
+                        </div>
+                    </div>
+                    <div class="proficiency-bar-container">
+                        <div class="proficiency-bar" style="width: 85%;"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção de Contato -->
+        <section id="contato">
+            <div class="container reveal">
+                <h2 class="section-title">Vamos Conversar?</h2>
+                <p>Estou sempre em busca de novos desafios e oportunidades. Se você tem um projeto em mente ou gostaria de se conectar, não hesite em me contatar.</p>
+                <div class="contact-links">
+                    <a href="https://www.linkedin.com/in/valdircaze" target="_blank" class="contact-link" aria-label="LinkedIn">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="mailto:caze.netto16@gmail.com" class="contact-link" aria-label="Email">
+                        <i class="fas fa-envelope"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Rodapé -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Valdir Cazé Silva Netto. Feito com paixão e código.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const hamburger = document.querySelector('.hamburger');
+            const mobileNav = document.querySelector('.mobile-nav');
+            const mobileNavLinks = document.querySelectorAll('.mobile-nav a');
+
+            // Toggle do menu mobile
+            hamburger.addEventListener('click', () => {
+                hamburger.classList.toggle('active');
+                mobileNav.classList.toggle('active');
+            });
+            
+            // Fechar menu ao clicar em um link
+            mobileNavLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    hamburger.classList.remove('active');
+                    mobileNav.classList.remove('active');
+                });
+            });
+
+            // --- Animação de digitação (Typewriter) ---
+            const subtitleEl = document.getElementById('subtitle');
+            const roles = ["Desenvolvedor Java.", "Entusiasta DevSecOps.", "Resolvedor de Problemas."];
+            let roleIndex = 0;
+            let charIndex = 0;
+            let isDeleting = false;
+
+            function type() {
+                const currentRole = roles[roleIndex];
+                let typeSpeed = 150;
+
+                if (isDeleting) {
+                    subtitleEl.textContent = currentRole.substring(0, charIndex - 1);
+                    charIndex--;
+                    typeSpeed = 75;
+                } else {
+                    subtitleEl.textContent = currentRole.substring(0, charIndex + 1);
+                    charIndex++;
+                }
+
+                if (!isDeleting && charIndex === currentRole.length) {
+                    typeSpeed = 2000;
+                    isDeleting = true;
+                } else if (isDeleting && charIndex === 0) {
+                    isDeleting = false;
+                    roleIndex = (roleIndex + 1) % roles.length;
+                    typeSpeed = 500;
+                }
+
+                setTimeout(type, typeSpeed);
+            }
+            type();
+
+            // --- Animação de revelação ao rolar a página ---
+            const revealElements = document.querySelectorAll('.reveal');
+            const revealOptions = {
+                threshold: 0.1,
+            };
+
+            const revealOnScroll = new IntersectionObserver(function(entries, observer) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, revealOptions);
+
+            revealElements.forEach(element => {
+                revealOnScroll.observe(element);
+            });
+            
+            // --- Ativar link de navegação na seção visível ---
+            const sections = document.querySelectorAll('section, header');
+            const navLinks = document.querySelectorAll('nav .nav-links a');
+
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if(pageYOffset >= sectionTop - 70){
+                        current = section.getAttribute('id');
+                    }
+                });
+                
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if(link.getAttribute('href').substring(1) === current){
+                        link.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
